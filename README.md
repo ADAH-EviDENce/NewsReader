@@ -4,6 +4,7 @@
 There are a number of implementations of the NewsReader pipeline:
 - [POAS](http://poas.eu/): pipeline-on-a-stick.
 - [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker file containing the first parts of the pipeline.
+- [alpino-docker](https://hub.docker.com/r/rugcompling/alpino/): another Docker file containing the first parts of the pipeline.
 - [vmc-from-scratch](https://github.com/ixa-ehu/vmc-from-scratch): creating a VM with the Dutch version of NewsReader
 - [newsreader-hadoop](https://github.com/sara-nl/newsreader-hadoop): hadoop implementation by SURFsara ([direct download](http://beehub.nl/surfsara-hadoop/public/newsreader-hadoop.tar.gz))
 
