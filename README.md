@@ -13,9 +13,28 @@ At the moment, none of these implementations succesfully build the whole pipelin
 
 ## Building from modules
 
-The script `newsreader.sh` is a work-in-progress bash script to run all modules sequentially. Before calling each functionality, it checks for the necessary dependencies. The bash script serves as a template for the Docker image that we aim to build. 
+We have imported all modules from [NewsReader](http://www.newsreader-project.eu/results/software/) under the heading "Dutch modules":
 
-Once complete, the image will be uploaded to Docker Hub. Then, it is possible to process a textfile using a single command.
+- [tokenization](https://github.com/ixa-ehu/ixa-pipe-pos): Splits text into tokens (words / punctuation symbols) ([wiki](https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization)).
+- [part-of-speech-tagging](https://github.com/cltl/morphosyntactic_parser_nl): tags words with grammar categories such as 'nouns' and 'verbs' ([wiki](https://en.wikipedia.org/wiki/Part-of-speech_tagging)).
+- [named-entity-recognition](https://github.com/ixa-ehu/ixa-pipe-nerc): recognizes words as named entities such as 'Holland' ([wiki](https://en.wikipedia.org/wiki/Named-entity_recognition)).
+- [named-entity-disambiguation](https://github.com/ixa-ehu/ixa-pipe-ned): some names refer to multiple entities, this module selects the most likely one ([wiki](https://en.wikipedia.org/wiki/Entity_linking)).
+- [word-sense-disambiguation](https://github.com/cltl/svm_wsd): selects the most likely meaning of individual words ([wiki](https://en.wikipedia.org/wiki/Word-sense_disambiguation)).
+- [time-expression-recognition](https://github.com/cltl/NAF-HeidelTime): recognizes that temporal expressions ([wiki](https://en.wikipedia.org/wiki/Temporal_expressions), [Heideltime](https://github.com/HeidelTime/heideltime)).
+- [predicate-matrix-tagging](https://github.com/cltl/OntoTagger): tags combinations of words with a relation between them, i.e. subject-predicate-object ([wiki](https://en.wikipedia.org/wiki/Predicate_(grammar))).
+- [semantic-role-labeling](https://github.com/newsreader/vua-srl-nl): assigns roles to agents, such as 'murderer' to subject and 'murdered' to object ([wiki](https://en.wikipedia.org/wiki/Semantic_role_labeling)).
+- [framenet-classifier](https://github.com/cltl/OntoTagger): identifies semantic frames, which means that "John sold a car to Mary" is recognized as the same meaning as "Mary bought a car from John" ([wiki](https://en.wikipedia.org/wiki/FrameNet)).
+- [nominal-event-detection](https://github.com/cltl/OntoTagger): identifies events from predicates and semantic role combinations.
+- [event-coreference](https://github.com/cltl/EventCoreference): determines that two recognized events are actually referring to the same event ([wiki](https://en.wikipedia.org/wiki/Coreference)).
+
+These modules depend on the following:
+- [KafNafParser](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
+- [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/): a dependency parser for Dutch text.
+- [dbpedia-spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight): tool for annotating mentions of DBpedia resources ([more info](http://www.dbpedia-spotlight.org/)).
+- [libsvm](https://www.csie.ntu.edu.tw/~cjlin/libsvm/): library of support vector machine classifiers.
+- [timbl](https://languagemachines.github.io/timbl/): Tilburg Memory-Based Learner, containing classifiers for symbolic feature spaces.
+
+We have stripped all unnecesary files (e.g. only 1 trained classification model per module) and centralized dependencies. `newsreader.sh` is a work-in-progress bash script to run all modules sequentially. Before calling each module, it checks for the necessary dependencies. The bash script serves as a template for a Docker image. Once complete, the image will be uploaded to Docker Hub. Then, it is possible to download, install and apply NewsReader to a textfile using a single Docker command.
 
 ### Contact
-Questions, comments and bugs can be submitted to the issues tracker.
+Questions, comments and bugs can be submitted to the [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues).
