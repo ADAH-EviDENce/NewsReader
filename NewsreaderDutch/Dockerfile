@@ -31,11 +31,20 @@ RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
 # Install morphosyntactic parser
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
-    && git checkout 6f789bd
+    && git checkout 6f789bd \
+    && python setup.py install
+    
 
-# Install NERC 
-RUN git clone https://github.com/ixa-ehu/ixa-pipe-nerc \
-    && cd ixa-pipe-nerc \
-    && git checkout 698fc89 \
-    && mvn -Dmaven.compiler.target=1.7 -Dmaven.compiler.source=1.7 clean package
+# Get NERC module; use specific (1.6.1) version of module and trained models to prevent mismatch
+# This is giving us the whole repo, while we only need the jar+models. 
+# We need to remove redundant data 
+RUN git clone https://github.com/ADAH-EviDENce/NewsReader \
+    && cd NewsReader \
+    && git checkout 6c1b01c
+
+   
+#RUN git clone https://github.com/ixa-ehu/ixa-pipe-nerc \
+#    && cd ixa-pipe-nerc \
+#    && git checkout 698fc89 \
+#    && mvn -Dmaven.compiler.target=1.7 -Dmaven.compiler.source=1.7 clean package
 
