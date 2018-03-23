@@ -21,11 +21,10 @@ We have imported all modules from [NewsReader](http://www.newsreader-project.eu/
 - [named-entity-disambiguation](https://github.com/ixa-ehu/ixa-pipe-ned): some names refer to multiple entities, this module selects the most likely one ([wiki](https://en.wikipedia.org/wiki/Entity_linking)).
 - [word-sense-disambiguation](https://github.com/cltl/svm_wsd): selects the most likely meaning of individual words ([wiki](https://en.wikipedia.org/wiki/Word-sense_disambiguation)).
 - [time-expression-recognition](https://github.com/cltl/NAF-HeidelTime): recognizes that temporal expressions ([wiki](https://en.wikipedia.org/wiki/Temporal_expressions), [Heideltime](https://github.com/HeidelTime/heideltime)).
-- [predicate-matrix-tagging](https://github.com/cltl/OntoTagger): tags combinations of words with a relation between them, i.e. subject-predicate-object ([wiki](https://en.wikipedia.org/wiki/Predicate_(grammar))).
+- [ontological-tagger](https://github.com/cltl/OntoTagger): tags words with [predicates](https://en.wikipedia.org/wiki/Predicate_(grammar)), i.e. subject-predicate-object, recognizes equivalent [semantic frames](https://en.wikipedia.org/wiki/FrameNet) and identifies events.
 - [semantic-role-labeling](https://github.com/newsreader/vua-srl-nl): assigns roles to agents, such as 'murderer' to subject and 'murdered' to object ([wiki](https://en.wikipedia.org/wiki/Semantic_role_labeling)).
-- [framenet-classifier](https://github.com/cltl/OntoTagger): identifies semantic frames, which means that "John sold a car to Mary" is recognized as the same meaning as "Mary bought a car from John" ([wiki](https://en.wikipedia.org/wiki/FrameNet)).
-- [nominal-event-detection](https://github.com/cltl/OntoTagger): identifies events from predicates and semantic role combinations.
 - [event-coreference](https://github.com/cltl/EventCoreference): determines that two recognized events are actually referring to the same event ([wiki](https://en.wikipedia.org/wiki/Coreference)).
+- [opinion-miner](https://github.com/cltl/opinion_miner_deluxe): detects whether a statement contains an opinion.
 
 These modules depend on the following:
 - [KafNafParser](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
