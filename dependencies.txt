@@ -1,14 +1,19 @@
 Central dependencies:
 KafNafParser
+vua-resources
 
-02 - POS:
+POS:
 Alpino
 
+WSD:
+libSVM
+models
 
+NEV:
 timbl
 
-11 - OPI:
+OPI:
 svmlight
-libsvm
+opinion_models
 polarity_models
 

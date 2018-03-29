@@ -11,7 +11,7 @@ There are a number of implementations of the NewsReader pipeline:
 
 At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)).
 
-## Building from modules
+## Modules
 
 We have imported all modules from [NewsReader](http://www.newsreader-project.eu/results/software/) under the heading "Dutch modules":
 
@@ -26,16 +26,25 @@ We have imported all modules from [NewsReader](http://www.newsreader-project.eu/
 - [event-coreference](https://github.com/cltl/EventCoreference): determines that two recognized events are actually referring to the same event ([wiki](https://en.wikipedia.org/wiki/Coreference)).
 - [opinion-miner](https://github.com/cltl/opinion_miner_deluxe): detects whether a statement contains an opinion.
 
-These modules depend on the following:
+These modules depend on the following software packages:
 - [KafNafParser](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
-- [vua-resources](http://svmlight.joachims.org/): a package with utility functions of the Computational Lexicology & Terminology Lab.
+- [vua-resources](http://svmlight.joachims.org/): a package with utility functions of the [Computational Lexicology & Terminology Lab](https://github.com/newsreader/vua-srl-dutch-nominal-events/).
 - [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/): a dependency parser for Dutch text.
 - [dbpedia-spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight): tool for annotating mentions of DBpedia resources ([more info](http://www.dbpedia-spotlight.org/)).
-- [libsvm](https://www.csie.ntu.edu.tw/~cjlin/libsvm/): library of support vector machines.s
+- [libsvm](https://www.csie.ntu.edu.tw/~cjlin/libsvm/): library of support vector machines.
 - [svmlight](http://svmlight.joachims.org/): library of support vector machines.
 - [timbl](https://languagemachines.github.io/timbl/): Tilburg Memory-Based Learner, containing classifiers for symbolic feature spaces.
 
-Our goal is to produce a light-weight pipeline. We have stripped all unnecesary files (e.g. only 1 trained classification model per module) and centralized dependencies. `newsreader.sh` is a work-in-progress bash script to run all modules sequentially. Before calling each module, it checks for the necessary dependencies. The bash script serves as a template for a Docker image. Once complete, the image will be uploaded to Docker Hub. Then, it is possible to download, install and apply NewsReader to a textfile using a single Docker command.
+## Usage
+
+Our goal is to produce a light-weight pipeline that can be downloaded and run through a single Docker command. The Dockerfile that builds the NewsReader image is still under construction. For now, we are testing the pipeline using the following two bash scripts:
+- `install_dependencies.sh`: checks if the necessary dependencies can be found. If not, it downloads and installs them.
+- `newsreader.sh`: assumes all modules have been installed and all dependencies have been set correctly. It starts the DBpedia-spotlight server and calls each module sequentially. Once it's finished, it shuts the server down again.
+
+An example of running the pipeline includes:
+```shell
+./newsreader.sh "txt03_Eickman_smaller.txt"
+```
 
 ### Contact
 Questions, comments and bugs can be submitted to the [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues).
