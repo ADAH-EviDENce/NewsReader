@@ -31,9 +31,24 @@ fi
 
 # Central-dependency: KafNafParser
 if [ ! -d $DEP/KafNafParser ]; then
+    echo "KafNafParser not found. Installing KafNafParserPy.."
     cd $DEP
     git clone https://github.com/cltl/KafNafParserPy
-    cd ..
+    cd KafNafParserPy
+    python setup.py install
+    cd $DIR
+else
+    echo "KafNafParser found."
+fi
+
+# Central-dependency: vua-resources
+if [ ! -d $DEP/vua-resources ]; then
+    echo "VUA-resources not found. Installing VUA-resources.."
+    cd $DEP
+    git clone https://github.com/cltl/vua-resources
+    cd $DIR
+else
+    echo "VUA-resources found."
 fi
 
 # Dependency of POS: Alpino
