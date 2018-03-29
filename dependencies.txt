@@ -1,0 +1,14 @@
+Central dependencies:
+KafNafParser
+
+02 - POS:
+Alpino
+
+
+timbl
+
+11 - OPI:
+svmlight
+libsvm
+polarity_models
+
