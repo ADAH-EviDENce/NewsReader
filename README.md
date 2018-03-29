@@ -9,7 +9,7 @@ There are a number of implementations of the NewsReader pipeline:
 - [newsreader-hadoop](https://github.com/sara-nl/newsreader-hadoop): hadoop filesystem implementation by SURFsara ([direct download](http://beehub.nl/surfsara-hadoop/public/newsreader-hadoop.tar.gz))
 - [cltl/nlpp](https://github.com/cltl/nlpp): contains a script that constructs the pipeline (EN+NL) from components.
 
-At the moment, none of these implementations succesfully build the whole pipeline for Dutch.
+At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)).
 
 ## Building from modules
 
@@ -28,12 +28,14 @@ We have imported all modules from [NewsReader](http://www.newsreader-project.eu/
 
 These modules depend on the following:
 - [KafNafParser](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
+- [vua-resources](http://svmlight.joachims.org/): a package with utility functions of the Computational Lexicology & Terminology Lab.
 - [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/): a dependency parser for Dutch text.
 - [dbpedia-spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight): tool for annotating mentions of DBpedia resources ([more info](http://www.dbpedia-spotlight.org/)).
-- [libsvm](https://www.csie.ntu.edu.tw/~cjlin/libsvm/): library of support vector machine classifiers.
+- [libsvm](https://www.csie.ntu.edu.tw/~cjlin/libsvm/): library of support vector machines.s
+- [svmlight](http://svmlight.joachims.org/): library of support vector machines.
 - [timbl](https://languagemachines.github.io/timbl/): Tilburg Memory-Based Learner, containing classifiers for symbolic feature spaces.
 
-We have stripped all unnecesary files (e.g. only 1 trained classification model per module) and centralized dependencies. `newsreader.sh` is a work-in-progress bash script to run all modules sequentially. Before calling each module, it checks for the necessary dependencies. The bash script serves as a template for a Docker image. Once complete, the image will be uploaded to Docker Hub. Then, it is possible to download, install and apply NewsReader to a textfile using a single Docker command.
+Our goal is to produce a light-weight pipeline. We have stripped all unnecesary files (e.g. only 1 trained classification model per module) and centralized dependencies. `newsreader.sh` is a work-in-progress bash script to run all modules sequentially. Before calling each module, it checks for the necessary dependencies. The bash script serves as a template for a Docker image. Once complete, the image will be uploaded to Docker Hub. Then, it is possible to download, install and apply NewsReader to a textfile using a single Docker command.
 
 ### Contact
 Questions, comments and bugs can be submitted to the [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues).
