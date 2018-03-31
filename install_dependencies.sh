@@ -24,9 +24,9 @@ DEP="central-dependencies"
 if [ ! -d $DEP/KafNafParserPy ]; then
     printf "KafNafParser not found. Installing KafNafParserPy..."
     cd $DEP
-    git clone https://github.com/cltl/KafNafParserPy
+    git clone https://github.com/cltl/KafNafParserPy > /dev/null
     cd KafNafParserPy
-    python setup.py install
+    python setup.py install > /dev/null
     cd $DIR
     printf "Done\n"
 else
@@ -37,7 +37,7 @@ fi
 if [ ! -d $DEP/vua-resources ]; then
     printf "VUA-resources not found. Installing VUA-resources..."
     cd $DEP
-    git clone https://github.com/cltl/vua-resources
+    git clone https://github.com/cltl/vua-resources > /dev/null
     cd $DIR
     printf "Done\n"
 else
@@ -130,8 +130,7 @@ if [ ! -d $OPI/models ]; then
     printf "Opinion-miner models not found. Downloading models..."
     cd $OPI
     wget --user=cltl --password='.cltl.' kyoto.let.vu.nl/~izquierdo/models_opinion_miner_deluxePP.tgz
-    tar -xvzf models_opinion_miner_deluxePP.tgz
-    exit 1
+    tar -xvzf models_opinion_miner_deluxePP.tgz > /dev/null
     rm models_opinion_miner_deluxePP.tgz
     cd models
     rm -Rf models_news_en/

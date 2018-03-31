@@ -1,50 +1,62 @@
-# This Dockerfile is based on the newsreader-docker from vanatteveldt on https://github.com/vanatteveldt/newsreader-docker
+# This Dockerfile is based on the newsreader-docker from vanatteveldt
+# https://github.com/vanatteveldt/newsreader-docker
 
 FROM rugcompling/alpino:latest
 MAINTAINER Martine de Vos (mgdevos@gmail.com)
 EXPOSE 5002
 
-# Get and unpack NERC models
-RUN mkdir models && curl http://i.amcat.nl/nerc-models-1.5.4-nl.tgz | tar xz -C models
-
-# Install required packages
+# Ubuntu dependencies
 RUN apt-get -qq update && apt-get install -y \
+    wget \ 
     git \
     maven \
     openjdk-8-jdk \
     python-flask \
     python-lxml \
-    python-pip
+    python-pip \
+    timbl
 
-# Install Apino naf-wrapper
+# Python dependencies
 RUN pip install KafNafParserPy
 
 # Install and compile tokenizer; use specific version (not necessarily latest)
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
     && cd ixa-pipe-tok \
     && git checkout 739ff20 \
-    && mvn -Dmaven.compiler.target=1.7 -Dmaven.compiler.source=1.7 clean package
-
-# Remove redundant data and models
-
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package
 
 # Install morphosyntactic parser
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
     && git checkout 6f789bd \
     && python setup.py install
-    
 
-# Get NERC module; use specific (1.6.1) version of module and trained models to prevent mismatch
-# This is giving us the whole repo, while we only need the jar+models. 
-# We need to remove redundant data 
-RUN git clone https://github.com/ADAH-EviDENce/NewsReader \
-    && cd NewsReader \
-    && git checkout 6c1b01c
+# Download ixa-pipes package to get matching ixa-pipe-nerc jar and model versions
+RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
+    && mkdir ixa-pipe-nerc \
+    && tar -zxvf ixa-pipes-1.1.1.tar.gz ixa-pipes-1.1.1/ixa-pipe-nerc-1.6.1-exec.jar \
+    && tar -xzvf ixa-pipes-1.1.1.tar.gz ixa-pipes-1.1.1/nerc-models-1.6.1/nl/nl-6-class-clusters-sonar.bin \
+    && mv ixa-pipes-1.1.1/ixa-pipe-nerc-1.6.1-exec.jar ixa-pipe-nerc/ \
+    && mv ixa-pipes-1.1.1/nerc-models-1.6.1/nl/nl-6-class-clusters-sonar.bin ixa-pipe-nerc/ \
+    && rm ixa-pipes-1.1.1.tar.gz \
+    && rm -Rf ixa-pipes-1.1.1
 
-   
-#RUN git clone https://github.com/ixa-ehu/ixa-pipe-nerc \
-#    && cd ixa-pipe-nerc \
-#    && git checkout 698fc89 \
-#    && mvn -Dmaven.compiler.target=1.7 -Dmaven.compiler.source=1.7 clean package
+# Download dbpedia-spotlight servers
+RUN wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar \
+    && wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz 
 
+RUN mkdir central-dependencies \
+    && cd central-dependencies \ 
+    && mkdir dbpedia-spotlight \
+    && cd dbpedia-spotlight \
+    && mv ../../dbpedia-spotlight-0.7.1.jar . \
+    && tar -xzvf ../../nl.tar.gz -C . \
+    && mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true \
+    && cd ../.. \
+    && rm nl.tar.gz 
+
+# Download and install ixa-pipe-ned
+RUN git clone https://github.com/ixa-ehu/ixa-pipe-ned \
+    && cd ixa-pipe-ned \
+    && git checkout 062a983 \
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package
