@@ -56,6 +56,20 @@ else
     printf "Alpino found.\n"
 fi
 
+# Dependency of NED: dbpedia-spotlight
+if [ ! -d $DEP/dbpedia-spotlight/nl ]; then
+    printf "DBpedia-spotlight not found. Downloading spotlight jar and models..."
+    cd $DEP/dbpedia-spotlight
+    apt-get install wget
+    wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar
+    wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz
+    tar -xzvf nl.tar.gz
+    cd $DIR
+    printf "Done\n"
+else
+    printf "DBpedia-spotlight found.\n"
+fi
+
 # Dependency of WSD: libSVM
 if [ ! -d $WSD/libsvm ]; then
     printf "libSVM not found. Installing libSVM..."
