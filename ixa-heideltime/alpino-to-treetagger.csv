@@ -1,0 +1,48 @@
+A*	ADJ
+R*	ADV
+D*	ART
+PI*	ART
+adj	ADJ
+det	DET
+adv	ADV
+vg	conjcoord
+Lemma \	BACKSLASH
+Lemma ,	CM
+Lemma :	COLON
+Lemma - 	DASH
+PD*	DM
+Lemma ?	DOTS
+Fp lemma:  .	FS
+PT*	INT
+PE*	INT
+I	ITJN
+Lemma (	LP
+Lemma [	LP
+NC*	NC
+NP*	NP
+Lemma %	PERCT
+PP3CSD00	PPC
+PP3CPD00	PPC
+PX*	PPO
+SP*	PREP
+Lemma "	QT
+Lemma '	QT
+PR*	REL
+Lemma )	RP
+Lemma ]	RP
+Lemma ;	SEMICOLON
+Lemma /	SLASH
+VAP*	VHadj
+VAI*	VHfin
+VAS*	VHfin
+VAM*	VHfin
+VAP*	VHfin
+VAG*	VHger
+VAN*	VHinf
+VSP*	VSadj
+VSI*	VSfin
+ VSS*	VSfin
+VSM*	VSfin
+VSP*	VSfin
+VSG*	VSger
+VSN*	VSinf

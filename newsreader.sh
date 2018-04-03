@@ -58,11 +58,11 @@ cat "$fn-ned.naf" | python2 $WSD/dsc_wsd_tagger.py --naf -ref odwnSY > "$fn-wsd.
 echo "Word sense disambiguation complete."
 
 # Time expression recognition (ixa-heideltime + Heideltime)
-# cat "$fn-wsd.naf" | > "$fn-time.naf"
-# echo "Time expression recognition complete."
+cat "$fn-wsd.naf" | java -jar $TIM/ixa.pipe.time.jar -m $TIM/alpino-to-treetagger.csv -c $TIM/config.props> "$fn-time.naf"
+echo "Time expression recognition complete."
 
 # Ontological tagging - predicates (PredicateMatrix tagger)
-cat "$fn-wsd.naf" | java -Xmx1812m -cp "$ONT/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.KafPredicateMatrixTagger --mappings "fn;mcr;ili;eso" --key odwn-eq --version 1.2 --predicate-matrix "$DEP/vua-resources/PredicateMatrix.v1.3.txt.role.odwn.gz" --grammatical-words "$DEP/vua-resources/Grammatical-words.nl" > "$fn-pmat.naf"
+cat "$fn-time.naf" | java -Xmx1812m -cp "$ONT/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.KafPredicateMatrixTagger --mappings "fn;mcr;ili;eso" --key odwn-eq --version 1.2 --predicate-matrix "$DEP/vua-resources/PredicateMatrix.v1.3.txt.role.odwn.gz" --grammatical-words "$DEP/vua-resources/Grammatical-words.nl" > "$fn-pmat.naf"
 echo "Predicate tagging complete."
 
 # Semantic Role Labeling (SONAR + TiMBL)
@@ -82,11 +82,11 @@ cat "$fn-events.naf" | python2 $NEV/vua-srl-dutch-additional-roles.py > "$fn-eva
 echo "Additional role tagging complete."
 
 # Event Coreference
-# cat "$fn-evtad.naf" | > "$fn-coref.naf"
-# echo "Event coreference recognition complete."
+cat "$fn-evtadd.naf" | $COR/event-coreference-nl.sh > "$fn-coref.naf"
+echo "Event coreference recognition complete."
 
 # Opinion miner (opinion_miner_deluxePP)
-cat "$fn-evadd.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn-opin.naf"
+cat "$fn-coref.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn-opin.naf"
 echo "Opinion mining complete."
 
 # Close dbpedia-spotlight server
