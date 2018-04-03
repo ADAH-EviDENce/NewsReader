@@ -3,10 +3,9 @@
 
 There are a number of implementations of the NewsReader pipeline:
 - [POAS](http://poas.eu/): pipeline-on-a-stick.
-- [vmc-from-scratch](https://github.com/ixa-ehu/vmc-from-scratch): creating a VM with the Dutch version of NewsReader
-- [newsreader-hadoop](https://github.com/sara-nl/newsreader-hadoop): hadoop filesystem implementation by SURFsara ([direct download](http://beehub.nl/surfsara-hadoop/public/newsreader-hadoop.tar.gz))
 - [cltl/nlpp](https://github.com/cltl/nlpp): contains a script that constructs the pipeline (EN+NL) from components.
-- [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker file containing the first parts of the pipeline (tok, pos, ner).
+- [vmc-from-scratch](https://github.com/ixa-ehu/vmc-from-scratch): creating a VM with the Dutch version of NewsReader
+- [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker image for setting up a NewsReader server.
 
 At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)).
 
