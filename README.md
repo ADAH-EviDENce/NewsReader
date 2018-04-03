@@ -1,13 +1,12 @@
 # NewsReader
-[NewsReader](www.newsreader-project.eu/) is a natural language processing pipeline. Among others, it tags parts-of-speech, recognizes named entities and annotates entities with predicates. 
+[NewsReader](www.newsreader-project.eu/) is a natural language processing pipeline. Among others, it tags parts-of-speech, recognizes named entities and annotates entities with predicates.
 
 There are a number of implementations of the NewsReader pipeline:
 - [POAS](http://poas.eu/): pipeline-on-a-stick.
-- [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker file containing the first parts of the pipeline (tok, pos, ner).
-- [alpino-docker](https://hub.docker.com/r/rugcompling/alpino/): another Docker file containing the first parts of the pipeline (tok, pos, ner).
 - [vmc-from-scratch](https://github.com/ixa-ehu/vmc-from-scratch): creating a VM with the Dutch version of NewsReader
 - [newsreader-hadoop](https://github.com/sara-nl/newsreader-hadoop): hadoop filesystem implementation by SURFsara ([direct download](http://beehub.nl/surfsara-hadoop/public/newsreader-hadoop.tar.gz))
 - [cltl/nlpp](https://github.com/cltl/nlpp): contains a script that constructs the pipeline (EN+NL) from components.
+- [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker file containing the first parts of the pipeline (tok, pos, ner).
 
 At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)).
 
@@ -43,7 +42,7 @@ Our goal is to produce a light-weight pipeline that can be downloaded and run th
 
 An example of running the pipeline includes:
 ```shell
-./newsreader.sh "txt03_Eickman_smaller.txt"
+./newsreader.sh "txt03.txt"
 ```
 
 ### Contact

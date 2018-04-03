@@ -1,0 +1,8 @@
+*.log
+*.pyc
+*.tar.gz
+*.tgz
+*.naf
+*.so.2
+/central-dependencies/*
+
