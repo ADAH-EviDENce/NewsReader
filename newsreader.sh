@@ -25,7 +25,7 @@ if [ $# == 0 ]; then
     echo "No file given as argument."
     exit 1
 else
-    fn=$(echo $1 | cut -d'.' -f 1)    
+    fn=$(echo "$1" | cut -d'.' -f 1)    
 fi
 
 # Start dbpedia-spotlight server
@@ -38,7 +38,7 @@ else
 fi
 
 # Tokenization (ixa-pipe-tok)
-cat $1 | java -jar $TOK/ixa-pipe-tok-2.0.0-exec.jar tok -l nl > "$fn-tok.naf"
+cat "$1" | java -jar $TOK/ixa-pipe-tok-2.0.0-exec.jar tok -l nl > "$fn-tok.naf"
 echo "Tokenization complete."
 
 # Part-of-speech-tagging (morphosyntactic parser + Alpino)
@@ -92,7 +92,7 @@ echo "Opinion mining complete."
 # Close dbpedia-spotlight server
 if lsof -Pi :2060 -sTCP:LISTEN -t > /dev/null ; then
     echo "Closing dbpedia-spotlight server."
-    kill $(lsof -Pi :2060 -sTCP:LISTEN -t)
+    kill "$(lsof -Pi :2060 -sTCP:LISTEN -t)"
 fi
 
 # Report

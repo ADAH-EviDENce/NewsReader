@@ -8,6 +8,7 @@ EXPOSE 5002
 # Ubuntu dependencies
 RUN apt-get -qq update && apt-get install -y \
     wget \ 
+    sed \
     git \
     maven \
     openjdk-8-jdk \
@@ -17,19 +18,37 @@ RUN apt-get -qq update && apt-get install -y \
     timbl
 
 # Python dependencies
-RUN pip install KafNafParserPy
+RUN pip install KafNafParserPy future
+
+# VUA-CLTL dependencies
+RUN mkdir central-dependencies \
+    && cd central-dependencies \ 
+    && git clone https://github.com/cltl/vua-resources 
+
+# Download dbpedia-spotlight servers
+RUN cd central-dependencies \
+    && mkdir dbpedia-spotlight \
+    && cd dbpedia-spotlight \
+    && wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar \
+    && wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz \
+    && tar -xzvf nl.tar.gz \
+    && mvn install:install-file -Dfile=dbpedia-spotlight-0.7.1.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true \
+    && rm nl.tar.gz \
+    && cd /
 
 # Install and compile tokenizer; use specific version (not necessarily latest)
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
     && cd ixa-pipe-tok \
     && git checkout 739ff20 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package \
+    && cd /
 
 # Install morphosyntactic parser
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
     && git checkout 6f789bd \
-    && python setup.py install
+    && python setup.py install \
+    && cd /
 
 # Download ixa-pipes package to get matching ixa-pipe-nerc jar and model versions
 RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
@@ -39,24 +58,60 @@ RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
     && mv ixa-pipes-1.1.1/ixa-pipe-nerc-1.6.1-exec.jar ixa-pipe-nerc/ \
     && mv ixa-pipes-1.1.1/nerc-models-1.6.1/nl/nl-6-class-clusters-sonar.bin ixa-pipe-nerc/ \
     && rm ixa-pipes-1.1.1.tar.gz \
-    && rm -Rf ixa-pipes-1.1.1
-
-# Download dbpedia-spotlight servers
-RUN wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar \
-    && wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz 
-
-RUN mkdir central-dependencies \
-    && cd central-dependencies \ 
-    && mkdir dbpedia-spotlight \
-    && cd dbpedia-spotlight \
-    && mv ../../dbpedia-spotlight-0.7.1.jar . \
-    && tar -xzvf ../../nl.tar.gz -C . \
-    && mvn install:install-file -Dfile=dbpedia-spotlight-0.7.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true \
-    && cd ../.. \
-    && rm nl.tar.gz 
+    && rm -Rf ixa-pipes-1.1.1 \
+    && cd /
 
 # Download and install ixa-pipe-ned
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-ned \
     && cd ixa-pipe-ned \
     && git checkout 062a983 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package \
+    && cd /
+
+# Download and install svm_wsd
+RUN git clone https://github.com/cltl/svm_wsd.git \
+    && cd svm_wsd \
+    && git checkout 0300439 \
+    && ./install_naf.sh \
+    && cd /
+
+# Download and install ixa-heideltime
+RUN git clone https://github.com/ixa-ehu/ixa-heideltime \
+    && cd ixa-heideltime \
+    && wget https://github.com/HeidelTime/heideltime/releases/download/VERSION2.2.1/heideltime-standalone-2.2.1.tar.gz \
+    && tar -xzvf heideltime-standalone-2.2.1.tar.gz \
+    && mv heideltime-standalone/de.unihd.dbs.heideltime.standalone.jar ./lib \
+    && mv heideltime-standalone/config.props . \
+    && rm -R heideltime-standalone \
+    && wget http://ixa2.si.ehu.es/%7Ejibalari/jvntextpro-2.0.jar \
+    && mv jvntextpro-2.0.jar lib/ \
+    && wget https://github.com/carchrae/install-to-project-repo/raw/master/install-to-project-repo.py \
+    && python2 install-to-project-repo.py \
+    && sed -i '159s|.*|              heidelTime.initialize(new UimaContextImpl(language, typeToProcess, false));|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '178s|.*|					// UIMAFramework|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '179s|.*|					// 		.getXMLParser()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '180s|.*|					// 		.parseTypeSystemDescription(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '181s|.*|					// 				new XMLInputSource(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '182s|.*|					// 						this.getClass()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '183s|.*|					// 								.getClassLoader()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '184s|.*|					// 								.getResource(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && sed -i '185s|.*|					// 										Config.get(Config.TYPESYSTEMHOME_DKPRO))))\n};|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
+    && mvn clean install
+
+# Download and install ontological tagger
+RUN git clone https://github.com/cltl/OntoTagger \
+    && cd OntoTagger \
+    && git checkout c3796c5 \
+    && mvn clean install
+
+# Download semantic role labeler
+RUN git clone https://github.com/newsreader/vua-srl-nl \
+    && cd vua-srl-nl \
+    && git checkout 997a85f
+
+# 
+RUN git clone https://github.com/newsreader/vua-srl-dutch-nominal-events \
+    && cd vua-srl-dutch-nominal-events \
+    && git checkout 6115b31
+
+

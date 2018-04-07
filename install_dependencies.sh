@@ -64,7 +64,7 @@ if [ ! -d $DEP/dbpedia-spotlight/nl ]; then
     wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar
     wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz
     tar -xzvf nl.tar.gz
-    cd $DIR
+    cd "$DIR"
     printf "Done\n"
 else
     printf "DBpedia-spotlight found.\n"
@@ -79,7 +79,7 @@ if [ ! -d $WSD/libsvm ]; then
     make > /dev/null
     cd ..
     mv libsvm.so.2 ..
-    cd $DIR
+    cd "$DIR"
     printf "Done\n"
 else
     printf "libSVM found.\n"
@@ -99,7 +99,7 @@ else
 fi
 
 # Dependency of SRL: additional roles for semantic role-labeling
-if [ ! -n $(which timbl) ]; then
+if [ ! -n "$(which timbl)" ]; then
     printf "TiMBL not found. Installing timbl..."
     apt-get -y install timbl > /dev/null
     printf "Done\n"
