@@ -35,14 +35,26 @@ These modules depend on the following software packages:
 
 ## Usage
 
-Our goal is to produce a light-weight pipeline that can be downloaded and run through a single Docker command. The Dockerfile that builds the NewsReader image is still under construction. For now, we are testing the pipeline using the following two bash scripts:
-- `install_dependencies.sh`: checks if the necessary dependencies can be found. If not, it downloads and installs them.
-- `newsreader.sh`: assumes all modules have been installed and all dependencies have been set correctly. It starts the DBpedia-spotlight server and calls each module sequentially. Once it's finished, it shuts the server down again.
-
-An example of running the pipeline includes:
+Our goal is to produce a light-weight pipeline as a Docker image. The image can be built through calling
 ```shell
-./newsreader.sh "txt03.txt"
+
+docker image build NewsreaderDutch --tag newsreader-dutch
 ```
+from within the cloned repository. The image will be made available on Docker Hub shortly.
+
+Once built, you can invoke an interactive container, with your local workspace mounted, by calling:
+```shell
+docker run -it --mount source=workspace/,destination=/work/ newsreader-dutch
+```
+where `workspace` is your local directory containing files that need to be processed.
+
+From within the container, there is a bash script that runs the entire pipeline:
+```
+./newsreader.sh "/work/txt03.txt"
+```
+The output will be the same file, but with a `.naf` extension.
+
+The Docker container can also be run directly on your text files as a daemon. Usage instructions will be coming soon.
 
 ### Contact
 Questions, comments and bugs can be submitted to the [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues).
