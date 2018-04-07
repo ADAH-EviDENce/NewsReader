@@ -109,9 +109,14 @@ RUN git clone https://github.com/newsreader/vua-srl-nl \
     && cd vua-srl-nl \
     && git checkout 997a85f
 
-# 
+# Download additional roles
 RUN git clone https://github.com/newsreader/vua-srl-dutch-nominal-events \
     && cd vua-srl-dutch-nominal-events \
     && git checkout 6115b31
 
-
+# Download EventCoreference
+RUN git clone https://github.com/cltl/EventCoreference.git \
+    && cd EventCoreference \
+    && git checkout a346edd \
+    && sed -i '46s|            <version>v3.1.2</version>|            <version>master-SNAPSHOT</version>|' pom.xml \
+    && mvn clean install

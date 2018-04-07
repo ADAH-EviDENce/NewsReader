@@ -25,7 +25,7 @@ We have imported all modules from [NewsReader](http://www.newsreader-project.eu/
 - [opinion-miner](https://github.com/cltl/opinion_miner_deluxe): detects whether a statement contains an opinion.
 
 These modules depend on the following software packages:
-- [KafNafParserPyf](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
+- [KafNafParserPy](https://github.com/cltl/KafNafParserPy): a parser for [KAF/NAF](https://github.com/newsreader/NAF) files in python.
 - [vua-resources](http://svmlight.joachims.org/): a package with utility functions of the [Computational Lexicology & Terminology Lab](https://github.com/newsreader/vua-srl-dutch-nominal-events/).
 - [Alpino](http://www.let.rug.nl/vannoord/alp/Alpino/): a dependency parser for Dutch text.
 - [dbpedia-spotlight](https://github.com/dbpedia-spotlight/dbpedia-spotlight): tool for annotating mentions of DBpedia resources ([more info](http://www.dbpedia-spotlight.org/)).
