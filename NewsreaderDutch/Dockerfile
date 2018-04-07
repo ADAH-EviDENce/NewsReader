@@ -120,3 +120,15 @@ RUN git clone https://github.com/cltl/EventCoreference.git \
     && git checkout a346edd \
     && sed -i '46s|            <version>v3.1.2</version>|            <version>master-SNAPSHOT</version>|' pom.xml \
     && mvn clean install
+
+# Download and install opinion_miner_deluxePP
+RUN git clone https://github.com/rubenIzquierdo/opinion_miner_deluxePP.git \
+    && cd opinion_miner_deluxePP \
+    && git checkout 40a714c
+
+# Download the central-dependency installation checker
+RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependencies.sh \
+    && ./install_dependencies.sh
+
+# Download main bash script
+RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh

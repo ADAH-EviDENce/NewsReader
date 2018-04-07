@@ -11,7 +11,7 @@ TOK="ixa-pipe-tok"
 POS="morphosyntactic_parser_nl"
 NER="ixa-pipe-nerc"
 NED="ixa-pipe-ned"
-WSD="vua-svm-wsd"
+WSD="svm_wsd"
 TIM="ixa-heideltime"
 ONT="OntoTagger"
 SRL="vua-srl-nl"
@@ -27,7 +27,7 @@ if [ ! -d $DEP/KafNafParserPy ]; then
     git clone https://github.com/cltl/KafNafParserPy > /dev/null
     cd KafNafParserPy
     python setup.py install > /dev/null
-    cd $DIR
+    cd "$DIR"
     printf "Done\n"
 else
     printf "KafNafParser found.\n"
