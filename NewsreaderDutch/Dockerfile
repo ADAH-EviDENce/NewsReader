@@ -128,7 +128,9 @@ RUN git clone https://github.com/rubenIzquierdo/opinion_miner_deluxePP.git \
 
 # Download the central-dependency installation checker
 RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependencies.sh \
+    && chmod o+x install_dependencies.sh \
     && ./install_dependencies.sh
 
 # Download main bash script
-RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh
+RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh \
+    && chmod o+x newsreader.sh
