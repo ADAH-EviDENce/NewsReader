@@ -3,20 +3,20 @@
 # NewsReader Dutch pipeline
 # http://www.newsreader-project.eu/results/software/
 # Script to run individual Dutch modules of NewsReader
-# set -e
+set -e
 
 # List of prefix names of modules
 DIR="$(pwd)/"
-TOK="ixa-pipe-tok"
+TOK="ixa-pipe-tok/target"
 POS="morphosyntactic_parser_nl"
 NER="ixa-pipe-nerc"
-NED="ixa-pipe-ned"
-WSD="vua-svm-wsd"
+NED="ixa-pipe-ned/target"
+WSD="svm_wsd"
 TIM="ixa-heideltime"
 ONT="OntoTagger"
 SRL="vua-srl-nl"
 NEV="vua-srl-dutch-nominal-events"
-COR="EventCoreference"
+COR="EventCoreference/scripts"
 OPI="opinion_miner_deluxePP"
 DEP="central-dependencies"
 
@@ -58,23 +58,23 @@ cat "$fn-ned.naf" | python2 $WSD/dsc_wsd_tagger.py --naf -ref odwnSY > "$fn-wsd.
 echo "Word sense disambiguation complete."
 
 # Time expression recognition (ixa-heideltime + Heideltime)
-cat "$fn-wsd.naf" | java -jar $TIM/ixa.pipe.time.jar -m $TIM/alpino-to-treetagger.csv -c $TIM/config.props> "$fn-time.naf"
+cat "$fn-wsd.naf" | java -jar $TIM/target/ixa.pipe.time.jar -m $TIM/lib/alpino-to-treetagger.csv -c $TIM/config.props> "$fn-time.naf"
 echo "Time expression recognition complete."
 
 # Ontological tagging - predicates (PredicateMatrix tagger)
-cat "$fn-time.naf" | java -Xmx1812m -cp "$ONT/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.KafPredicateMatrixTagger --mappings "fn;mcr;ili;eso" --key odwn-eq --version 1.2 --predicate-matrix "$DEP/vua-resources/PredicateMatrix.v1.3.txt.role.odwn.gz" --grammatical-words "$DEP/vua-resources/Grammatical-words.nl" > "$fn-pmat.naf"
+cat "$fn-time.naf" | java -Xmx1812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.KafPredicateMatrixTagger --mappings "fn;mcr;ili;eso" --key odwn-eq --version 1.2 --predicate-matrix "$DEP/vua-resources/PredicateMatrix.v1.3.txt.role.odwn.gz" --grammatical-words "$DEP/vua-resources/Grammatical-words.nl" > "$fn-pmat.naf"
 echo "Predicate tagging complete."
 
 # Semantic Role Labeling (SONAR + TiMBL)
-cat "$fn-pmat.naf" | ./$SRL/run.sh 
+cat "$fn-pmat.naf" | ./$SRL/run.sh > "$fn-pmat.naf" 
 echo "Semantic role labeling complete."
 
 # Ontological tagging - FrameNets (FrameNetClassifier)
-cat "$fn-pmat.naf" | java -Xmx1812m -cp "$ONT/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.SrlFrameNetTagger --frame-ns "fn:" --role-ns "fn-role:;pb-role:;fn-pb-role:;eso-role:" --ili-ns "mcr:ili" --sense-conf 0.05 --frame-conf 30 > "$fn-frm.naf"
+cat "$fn-pmat.naf" | java -Xmx1812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.SrlFrameNetTagger --frame-ns "fn:" --role-ns "fn-role:;pb-role:;fn-pb-role:;eso-role:" --ili-ns "mcr:ili" --sense-conf 0.05 --frame-conf 30 > "$fn-frm.naf"
 echo "FrameNet classification complete."
 
 # Ontological tagging - Nominal Events (NominalEventCoreference)
-cat "$fn-frm.naf" | java -Xmx812m -cp "$ONT/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.NominalEventCoreference --framenet-lu "$DEP/vua-resources/nl-luIndex.xml" > "$fn-events.naf"
+cat "$fn-frm.naf" | java -Xmx812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.NominalEventCoreference --framenet-lu "$DEP/vua-resources/nl-luIndex.xml" > "$fn-events.naf"
 echo "Nominal event tagging complete."
 
 # Nominal events (additional-dutch-roles)
@@ -82,7 +82,7 @@ cat "$fn-events.naf" | python2 $NEV/vua-srl-dutch-additional-roles.py > "$fn-eva
 echo "Additional role tagging complete."
 
 # Event Coreference
-cat "$fn-evtadd.naf" | $COR/event-coreference-nl.sh > "$fn-coref.naf"
+cat "$fn-evadd.naf" | $COR/event-coreference-nl.sh > "$fn-coref.naf"
 echo "Event coreference recognition complete."
 
 # Opinion miner (opinion_miner_deluxePP)

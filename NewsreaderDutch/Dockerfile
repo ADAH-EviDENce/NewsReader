@@ -8,6 +8,7 @@ EXPOSE 5002
 # Ubuntu dependencies
 RUN apt-get -qq update && apt-get install -y \
     wget \ 
+    lsof \
     sed \
     git \
     maven \
@@ -119,12 +120,14 @@ RUN git clone https://github.com/cltl/EventCoreference.git \
     && cd EventCoreference \
     && git checkout a346edd \
     && sed -i '46s|            <version>v3.1.2</version>|            <version>master-SNAPSHOT</version>|' pom.xml \
-    && mvn clean install
+    && mvn clean install \
+    && mkdir lib \
+    && mv ./target/EventCoreference-v*-jar-with-dependencies.jar ./lib/ 
 
 # Download and install opinion_miner_deluxePP
 RUN git clone https://github.com/rubenIzquierdo/opinion_miner_deluxePP.git \
     && cd opinion_miner_deluxePP \
-    && git checkout 40a714c
+    && git checkout 40a714c 
 
 # Download the central-dependency installation checker
 RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependencies.sh \
