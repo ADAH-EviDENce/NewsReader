@@ -38,19 +38,19 @@ These modules depend on the following software packages:
 Our goal is to produce a light-weight pipeline as a Docker image. The image can be built through calling
 ```shell
 
-docker image build NewsreaderDutch --tag newsreader-dutch
+docker image build -t newsreader-dutch NewsreaderDutch/
 ```
 from within the cloned repository. The image will be made available on Docker Hub shortly.
 
 Once built, you can invoke an interactive container, with your local workspace mounted, by calling:
 ```shell
-docker run -it --mount source=workspace/,destination=/work/ newsreader-dutch
+docker run -it -v /workspace/:/work/ newsreader-dutch
 ```
-where `workspace` is your local directory containing files that need to be processed.
+where `/workspace/` is your local directory containing files that need to be processed.
 
 From within the container, there is a bash script that runs the entire pipeline:
-```
-./newsreader.sh "/work/txt03.txt"
+```shell
+./newsreader.sh /work/txt03.txt
 ```
 The output will be the same file, but with a `.naf` extension.
 

@@ -4,5 +4,6 @@
 *.tgz
 *.naf
 *.so.2
+*.viminfo
 /central-dependencies/*
 

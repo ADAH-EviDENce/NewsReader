@@ -7,16 +7,16 @@ set -e
 
 # List of prefix names of modules
 DIR="$(pwd)/"
-TOK="ixa-pipe-tok/target"
+TOK="ixa-pipe-tok"
 POS="morphosyntactic_parser_nl"
 NER="ixa-pipe-nerc"
-NED="ixa-pipe-ned/target"
+NED="ixa-pipe-ned"
 WSD="svm_wsd"
 TIM="ixa-heideltime"
 ONT="OntoTagger"
 SRL="vua-srl-nl"
 NEV="vua-srl-dutch-nominal-events"
-COR="EventCoreference/scripts"
+COR="EventCoreference"
 OPI="opinion_miner_deluxePP"
 DEP="central-dependencies"
 
@@ -33,12 +33,11 @@ if lsof -Pi :2060 -sTCP:LISTEN -t > /dev/null ; then
     echo "DBpedia-spotlight server already running."
 else
     echo "Starting dbpedia-spotlight server.."
-    sh $DEP/dbpedia-spotlight/start-dbpedia-spotlight.sh > dbpedia-spotlight.log 2>&1 &
-    sleep 5
+    java -jar $DEP/dbpedia-spotlight/dbpedia-spotlight-0.7.1.jar $DEP/dbpedia-spotlight/nl http://localhost:2060/rest > dbpedia-spotlight.log 2>&1 &
 fi
 
 # Tokenization (ixa-pipe-tok)
-cat "$1" | java -jar $TOK/ixa-pipe-tok-2.0.0-exec.jar tok -l nl > "$fn-tok.naf"
+cat "$1" | java -jar $TOK/target/ixa-pipe-tok-2.0.0-exec.jar tok -l nl > "$fn-tok.naf"
 echo "Tokenization complete."
 
 # Part-of-speech-tagging (morphosyntactic parser + Alpino)
@@ -50,7 +49,7 @@ cat "$fn-pos.naf" | java -jar $NER/ixa-pipe-nerc-1.6.1-exec.jar tag -m $NER/nl-6
 echo "Named entity recognition complete."
 
 # Named Entity Disambiguation (ixa-pipe-ned)
-cat "$fn-ner.naf" | java -jar $NED/ixa-pipe-ned-1.1.6.jar -p 2060 > "$fn-ned.naf"
+cat "$fn-ner.naf" | java -jar $NED/target/ixa-pipe-ned-1.1.6.jar -p 2060 > "$fn-ned.naf"
 echo "Named entity disambiguation complete."
 
 # Word Sense Disambiguation (svm_wsd)
@@ -66,11 +65,11 @@ cat "$fn-time.naf" | java -Xmx1812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-
 echo "Predicate tagging complete."
 
 # Semantic Role Labeling (SONAR + TiMBL)
-cat "$fn-pmat.naf" | ./$SRL/run.sh > "$fn-pmat.naf" 
+cat "$fn-pmat.naf" | $SRL/run.sh > "$fn-srl.naf" 
 echo "Semantic role labeling complete."
 
 # Ontological tagging - FrameNets (FrameNetClassifier)
-cat "$fn-pmat.naf" | java -Xmx1812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.SrlFrameNetTagger --frame-ns "fn:" --role-ns "fn-role:;pb-role:;fn-pb-role:;eso-role:" --ili-ns "mcr:ili" --sense-conf 0.05 --frame-conf 30 > "$fn-frm.naf"
+cat "$fn-srl.naf" | java -Xmx1812m -cp "$ONT/target/ontotagger-v3.1.1-jar-with-dependencies.jar" eu.kyotoproject.main.SrlFrameNetTagger --frame-ns "fn:" --role-ns "fn-role:;pb-role:;fn-pb-role:;eso-role:" --ili-ns "mcr:ili" --sense-conf 0.05 --frame-conf 30 > "$fn-frm.naf"
 echo "FrameNet classification complete."
 
 # Ontological tagging - Nominal Events (NominalEventCoreference)
@@ -82,11 +81,11 @@ cat "$fn-events.naf" | python2 $NEV/vua-srl-dutch-additional-roles.py > "$fn-eva
 echo "Additional role tagging complete."
 
 # Event Coreference
-cat "$fn-evadd.naf" | $COR/event-coreference-nl.sh > "$fn-coref.naf"
+cat "$fn-evadd.naf" | java -Xmx812m -cp "$COR/lib/EventCoreference-v3.1.2-jar-with-dependencies.jar" eu.newsreader.eventcoreference.naf.EventCorefWordnetSim --method leacock-chodorow --wn-lmf "$DEP/vua-resources/odwn_orbn_gwg-LMF_1.3.xml.gz" --sim 2.0 --sim-ont 0.6 --wsd 0.8 --relations "XPOS_NEAR_SYNONYM#HAS_HYPERONYM#HAS_XPOS_HYPERONYM#event" --source-frames "$DEP/vua-resources/source.txt" --grammatical-frames "$DEP/vua-resources/grammatical.txt" --contextual-frames "$DEP/vua-resources/contextual.txt" > "$fn-coref.naf"
 echo "Event coreference recognition complete."
 
 # Opinion miner (opinion_miner_deluxePP)
-cat "$fn-coref.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn-opin.naf"
+cat "$fn-coref.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn-final.naf"
 echo "Opinion mining complete."
 
 # Close dbpedia-spotlight server
