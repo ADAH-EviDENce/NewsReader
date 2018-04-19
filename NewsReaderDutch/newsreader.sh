@@ -85,7 +85,7 @@ cat "$fn-evadd.naf" | java -Xmx812m -cp "$COR/lib/EventCoreference-v3.1.2-jar-wi
 echo "Event coreference recognition complete."
 
 # Opinion miner (opinion_miner_deluxePP)
-cat "$fn-coref.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn-final.naf"
+cat "$fn-coref.naf" | python2 $OPI/tag_file.py -f $OPI/models/models_news_nl/ > "$fn.naf"
 echo "Opinion mining complete."
 
 # Close dbpedia-spotlight server

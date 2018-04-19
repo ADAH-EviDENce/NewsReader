@@ -130,6 +130,6 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/
 
 # This ENTRYPOINT overrides the CMD in the Alpino Docker
 # User still has to specify the path to inputfile(s)
-ENTRYPOINT ["newsreader.sh"]
+ENTRYPOINT ["/newsreader.sh"]
 CMD []
 

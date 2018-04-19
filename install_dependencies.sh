@@ -20,6 +20,11 @@ COR="EventCoreference"
 OPI="opinion_miner_deluxePP"
 DEP="central-dependencies"
 
+# Check for central dependency folder
+if [ ! -d $DEP ]; then
+    mkdir $DEP
+fi
+
 # Central-dependency: KafNafParser
 if [ ! -d $DEP/KafNafParserPy ]; then
     printf "KafNafParser not found. Installing KafNafParserPy..."
