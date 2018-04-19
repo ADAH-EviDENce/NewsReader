@@ -131,3 +131,9 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependen
 # Download main bash script
 RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh \
     && chmod a+x newsreader.sh
+
+# This ENTRYPOINT overrides the CMD in the Alpino Docker
+# User still has to specify the path to inputfile(s)
+ENTRYPOINT ["newsreader.sh"]
+CMD []
+
