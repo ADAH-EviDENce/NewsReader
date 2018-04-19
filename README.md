@@ -7,7 +7,7 @@ There are a number of implementations of the NewsReader pipeline:
 - [vmc-from-scratch](https://github.com/ixa-ehu/vmc-from-scratch): creating a VM with the Dutch version of NewsReader
 - [newsreader-docker](https://hub.docker.com/r/vanatteveldt/newsreader-docker/): a Docker image for setting up a NewsReader server.
 
-At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)).
+At the moment, none of these implementations succesfully build the whole pipeline for Dutch (see [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues)). We have therefore decided to build the pipeline from individual modules.
 
 ## Modules
 
@@ -33,16 +33,26 @@ These modules depend on the following software packages:
 - [svmlight](http://svmlight.joachims.org/): library of support vector machines.
 - [timbl](https://languagemachines.github.io/timbl/): Tilburg Memory-Based Learner, containing classifiers for symbolic feature spaces.
 
-## Usage
-
-Our goal is to produce a light-weight pipeline as a Docker image. The image can be built through calling
+## Build
+The goal is to construct a lightweight, portable pipeline, which we achieve through a Docker image. This image is available from Docker Hub and can be obtained by pulling:
 ```shell
-
-docker image build -t newsreader-dutch NewsreaderDutch/
+docker pull evidence/newsreaderdutch
 ```
-from within the cloned repository. The image will be made available on Docker Hub shortly.
 
-Once built, you can invoke an interactive container, with your local workspace mounted, by calling:
+If you would like to make change and build the image yourself, call:
+```shell
+docker image build -t newsreaderdutch NewsReaderDutch/
+```
+from within the root of the repository.
+
+## Usage
+The Docker container can be run directly on your text files by calling:
+```shell
+docker run newsreaderdutch file.txt
+```
+where `file.txt` is the document that you would like to get annotated.
+
+For an interactive container (with your local workspace mounted) call:
 ```shell
 docker run -it -v /workspace/:/work/ newsreader-dutch
 ```
@@ -50,11 +60,9 @@ where `/workspace/` is your local directory containing files that need to be pro
 
 From within the container, there is a bash script that runs the entire pipeline:
 ```shell
-./newsreader.sh /work/txt03.txt
+./newsreader.sh /work/file.txt
 ```
-The output will be the same file, but with a `.naf` extension.
-
-The Docker container can also be run directly on your text files as a daemon. Usage instructions will be coming soon.
+The output will be the same file, but with a `*-final.naf` extension. The repository contains an example textfile (`txt03.txt`) with a single sentence. Currently, the pipeline writes the output of each module separately as well.
 
 ### Contact
 Questions, comments and bugs can be submitted to the [issues tracker](https://github.com/ADAH-EviDENce/NewsReader/issues).
