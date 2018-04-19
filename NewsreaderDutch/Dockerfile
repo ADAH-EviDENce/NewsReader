@@ -34,22 +34,19 @@ RUN cd central-dependencies \
     && wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz \
     && tar -xzvf nl.tar.gz \
     && mvn install:install-file -Dfile=dbpedia-spotlight-0.7.1.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true \
-    && rm nl.tar.gz \
-    && cd /
+    && rm nl.tar.gz 
 
 # Install and compile tokenizer; use specific version (not necessarily latest)
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
     && cd ixa-pipe-tok \
     && git checkout 739ff20 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package \
-    && cd /
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package 
 
 # Install morphosyntactic parser
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
     && git checkout 6f789bd \
-    && python setup.py install \
-    && cd /
+    && python setup.py install 
 
 # Download ixa-pipes package to get matching ixa-pipe-nerc jar and model versions
 RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
@@ -59,22 +56,19 @@ RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
     && mv ixa-pipes-1.1.1/ixa-pipe-nerc-1.6.1-exec.jar ixa-pipe-nerc/ \
     && mv ixa-pipes-1.1.1/nerc-models-1.6.1/nl/nl-6-class-clusters-sonar.bin ixa-pipe-nerc/ \
     && rm ixa-pipes-1.1.1.tar.gz \
-    && rm -Rf ixa-pipes-1.1.1 \
-    && cd /
+    && rm -Rf ixa-pipes-1.1.1 
 
 # Download and install ixa-pipe-ned
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-ned \
     && cd ixa-pipe-ned \
     && git checkout 062a983 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package \
-    && cd /
+    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package 
 
 # Download and install svm_wsd
 RUN git clone https://github.com/cltl/svm_wsd.git \
     && cd svm_wsd \
     && git checkout 0300439 \
-    && ./install_naf.sh \
-    && cd /
+    && ./install_naf.sh 
 
 # Download and install ixa-heideltime
 RUN git clone https://github.com/ixa-ehu/ixa-heideltime \
@@ -136,4 +130,4 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependen
 
 # Download main bash script
 RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh \
-    && chmod o+x newsreader.sh
+    && chmod a+x newsreader.sh
