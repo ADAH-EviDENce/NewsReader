@@ -1,9 +1,5 @@
-# This Dockerfile is based on the newsreader-docker from vanatteveldt
-# https://github.com/vanatteveldt/newsreader-docker
-
 FROM rugcompling/alpino:latest
 MAINTAINER Martine de Vos (mgdevos@gmail.com)
-EXPOSE 5002
 
 # Ubuntu dependencies
 RUN apt-get -qq update && apt-get install -y \
@@ -124,12 +120,12 @@ RUN git clone https://github.com/rubenIzquierdo/opinion_miner_deluxePP.git \
     && git checkout 40a714c 
 
 # Download the central-dependency installation checker
-RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/install_dependencies.sh \
-    && chmod o+x install_dependencies.sh \
-    && ./install_dependencies.sh
+RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/check_dependencies.sh \
+    && chmod o+x check_dependencies.sh \
+    && ./check_dependencies.sh
 
 # Download main bash script
-RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/newsreader.sh \
+RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/newsreader.sh \
     && chmod a+x newsreader.sh
 
 # This ENTRYPOINT overrides the CMD in the Alpino Docker
