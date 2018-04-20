@@ -6,7 +6,6 @@
 set -e
 
 # List of prefix names of modules
-DIR="$(pwd)/"
 TOK="ixa-pipe-tok"
 POS="morphosyntactic_parser_nl"
 NER="ixa-pipe-nerc"
@@ -41,7 +40,7 @@ cat "$1" | java -jar $TOK/target/ixa-pipe-tok-2.0.0-exec.jar tok -l nl > "$fn-to
 echo "Tokenization complete."
 
 # Part-of-speech-tagging (morphosyntactic parser + Alpino)
-cat "$fn-tok.naf" | python -m alpinonaf -t 0.1 > "$fn-pos.naf"
+cat "$fn-tok.naf" | python -m alpinonaf -t 0.05 > "$fn-pos.naf"
 echo "Part-of-speech tagging complete."
 
 # Named Entity Recognition (ixa-pipe-ner)
