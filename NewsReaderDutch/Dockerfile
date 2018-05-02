@@ -9,7 +9,6 @@ RUN apt-get -qq update && apt-get install -y \
     git \
     maven \
     openjdk-8-jdk \
-    python-flask \
     python-lxml \
     python-pip \
     timbl
@@ -69,24 +68,16 @@ RUN git clone https://github.com/cltl/svm_wsd.git \
 # Download and install ixa-heideltime
 RUN git clone https://github.com/ixa-ehu/ixa-heideltime \
     && cd ixa-heideltime \
-    && wget https://github.com/HeidelTime/heideltime/releases/download/VERSION2.2.1/heideltime-standalone-2.2.1.tar.gz \
-    && tar -xzvf heideltime-standalone-2.2.1.tar.gz \
+    && wget http://goo.gl/D6lUEN \
+    && tar -xzvf D6lUEN \
     && mv heideltime-standalone/de.unihd.dbs.heideltime.standalone.jar ./lib \
     && mv heideltime-standalone/config.props . \
+    && rm D6lUEN \
     && rm -R heideltime-standalone \
     && wget http://ixa2.si.ehu.es/%7Ejibalari/jvntextpro-2.0.jar \
     && mv jvntextpro-2.0.jar lib/ \
     && wget https://github.com/carchrae/install-to-project-repo/raw/master/install-to-project-repo.py \
     && python2 install-to-project-repo.py \
-    && sed -i '159s|.*|              heidelTime.initialize(new UimaContextImpl(language, typeToProcess, false));|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '178s|.*|					// UIMAFramework|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '179s|.*|					// 		.getXMLParser()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '180s|.*|					// 		.parseTypeSystemDescription(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '181s|.*|					// 				new XMLInputSource(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '182s|.*|					// 						this.getClass()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '183s|.*|					// 								.getClassLoader()|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '184s|.*|					// 								.getResource(|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
-    && sed -i '185s|.*|					// 										Config.get(Config.TYPESYSTEMHOME_DKPRO))))\n};|' ./src/main/java/ixa/pipe/time/IXAPipeHeidelTime.java \
     && mvn clean install
 
 # Download and install ontological tagger
@@ -131,5 +122,5 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/
 # This ENTRYPOINT overrides the CMD in the Alpino Docker
 # User still has to specify the path to inputfile(s)
 ENTRYPOINT ["/newsreader.sh"]
-CMD []
+CMD ["/bin/bash"]
 
