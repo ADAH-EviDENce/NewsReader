@@ -3,18 +3,23 @@ MAINTAINER Martine de Vos (mgdevos@gmail.com)
 
 # Ubuntu dependencies
 RUN apt-get -qq update && apt-get install -y \
+    software-properties-common \
     wget \ 
     lsof \
     sed \
-    git \
-    maven \
-    openjdk-8-jdk \
-    python-lxml \
-    python-pip \
-    timbl
+    git
+
+# Java dependencies
+RUN add-apt-repository ppa:openjdk-r/ppa && \
+    apt-get update && \
+    apt-get install -y openjdk-8-jdk maven
 
 # Python dependencies
-RUN pip install KafNafParserPy future
+RUN apt-get install -y python-pip && \
+    pip install KafNafParserPy future
+
+# Tilburg ILK dependencies
+RUN apt-get install -y timbl
 
 # VUA-CLTL dependencies
 RUN mkdir central-dependencies \
@@ -123,4 +128,3 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/
 # User still has to specify the path to inputfile(s)
 ENTRYPOINT ["/newsreader.sh"]
 CMD ["/bin/bash"]
-
