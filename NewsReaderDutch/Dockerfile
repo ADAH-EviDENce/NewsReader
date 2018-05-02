@@ -2,21 +2,18 @@ FROM rugcompling/alpino:latest
 MAINTAINER Martine de Vos (mgdevos@gmail.com)
 
 # Ubuntu dependencies
-RUN apt-get -qq update && apt-get install -y \
-    software-properties-common \
-    wget \ 
-    lsof \
-    sed \
-    git
+RUN apt-get update -qq && apt-get install -y wget lsof sed git
 
 # Java dependencies
-RUN add-apt-repository ppa:openjdk-r/ppa && \
-    apt-get update && \
-    apt-get install -y openjdk-8-jdk maven
+RUN echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list \
+    && apt-get update -qq \
+    && apt install -t jessie-backports -y openjdk-8-jdk ca-certificates-java \
+    && /usr/sbin/update-java-alternatives -s java-1.8.0-openjdk-amd64 \
+    && apt-get install -y maven
 
 # Python dependencies
-RUN apt-get install -y python-pip && \
-    pip install KafNafParserPy future
+RUN apt-get install -y python-pip python-lxml \
+    && pip install KafNafParserPy future
 
 # Tilburg ILK dependencies
 RUN apt-get install -y timbl
@@ -40,7 +37,7 @@ RUN cd central-dependencies \
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
     && cd ixa-pipe-tok \
     && git checkout 739ff20 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package 
+    && mvn clean install
 
 # Install morphosyntactic parser
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
@@ -62,7 +59,7 @@ RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
 RUN git clone https://github.com/ixa-ehu/ixa-pipe-ned \
     && cd ixa-pipe-ned \
     && git checkout 062a983 \
-    && mvn -Dmaven.compiler.target=1.8 -Dmaven.compiler.source=1.8 clean package 
+    && mvn -Dmaven.compiler.target=1.7 -Dmaven.compiler.source=1.7 clean package 
 
 # Download and install svm_wsd
 RUN git clone https://github.com/cltl/svm_wsd.git \
