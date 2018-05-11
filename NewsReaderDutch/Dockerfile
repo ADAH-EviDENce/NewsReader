@@ -46,7 +46,7 @@ RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd alpinonaf \
     && sed -i '/import tempfile/a from glob import glob' morph_syn_parser.py \
     && sed -i "s/cmd = os.path.join(alpino_home, 'bin', 'Alpino')/&  + ' -veryfast -notk'/" morph_syn_parser.py \
-    && sed -i "/logging.warning('Not found the file {}'.format(missing  _files))/a    xml_files = glob(out_folder_alp + '*.xml')" morph_syn_parser.py \
+    && sed -i "/        logging.warning('Not found the file {}'.format(missing  _files))/a \ \ \ \ xml_files = glob(out_folder_alp + '*.xml')" morph_syn_parser.py \
     && sed -i "s/output = check_output(cmd)/output = Popen(cmd, stdout=PIPE, stderr=None).stdout.read()/" morph_syn_parser.py \
     && cd .. \
     && python setup.py install
@@ -125,7 +125,7 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/
 
 # Download main bash script
 RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/newsreader.sh \
-    && chmod o+x newsreader.sh
+    && chmod a+x newsreader.sh
 
 # This ENTRYPOINT overrides the CMD in the Alpino Docker
 # User still has to specify the path to inputfile(s)
