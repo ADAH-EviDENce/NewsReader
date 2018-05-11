@@ -6,18 +6,18 @@
 set -e
 
 # List of prefix names of modules       
-TOK="ixa-pipe-tok"
-POS="morphosyntactic_parser_nl"
-NER="ixa-pipe-nerc"
-NED="ixa-pipe-ned"
-WSD="svm_wsd"
-TIM="ixa-heideltime"
-ONT="OntoTagger"
-SRL="vua-srl-nl"
-NEV="vua-srl-dutch-nominal-events"
-COR="EventCoreference"
-OPI="opinion_miner_deluxePP"
-DEP="central-dependencies"
+TOK="/ixa-pipe-tok"
+POS="/morphosyntactic_parser_nl"
+NER="/ixa-pipe-nerc"
+NED="/ixa-pipe-ned"
+WSD="/svm_wsd"
+TIM="/ixa-heideltime"
+ONT="/OntoTagger"
+SRL="/vua-srl-nl"
+NEV="/vua-srl-dutch-nominal-events"
+COR="/EventCoreference"
+OPI="/opinion_miner_deluxePP"
+DEP="/central-dependencies"
 
 # Check for file given
 if [ $# == 0 ]; then
@@ -26,6 +26,9 @@ if [ $# == 0 ]; then
 else
     fn=$(echo "$1" | cut -d'.' -f 1)    
 fi
+
+# Start timer
+SECONDS=0
 
 # Start dbpedia-spotlight server
 if lsof -Pi :2060 -sTCP:LISTEN -t > /dev/null ; then
@@ -136,7 +139,7 @@ else
 fi
 
 # Nominal events (additional-dutch-roles)
-printf "Starting additional-dutch-role-tagging"
+printf "Starting additional-dutch-role-tagging... "
 (cat "$fn-eve.naf" | python2 $NEV/vua-srl-dutch-additional-roles.py > "$fn-adr.naf" 2> "$fn-adr.log") 2> "$fn-adr.err"; [ -s "$fn-adr.err" ] || rm -f "$fn-adr.err"
 if [ -e "$fn-adr.err" ]; then
     printf "error. Check $fn-adr.err for details.\n"
@@ -146,7 +149,7 @@ else
 fi
 
 # Event Coreference
-printf "Starting event-coreferencing"
+printf "Starting event-coreferencing... "
 (cat "$fn-adr.naf" | java -Xmx812m -cp "$COR/lib/EventCoreference-v3.1.2-jar-with-dependencies.jar" eu.newsreader.eventcoreference.naf.EventCorefWordnetSim --method leacock-chodorow --wn-lmf "$DEP/vua-resources/odwn_orbn_gwg-LMF_1.3.xml.gz" --sim 2.0 --sim-ont 0.6 --wsd 0.8 --relations "XPOS_NEAR_SYNONYM#HAS_HYPERONYM#HAS_XPOS_HYPERONYM#event" --source-frames "$DEP/vua-resources/source.txt" --grammatical-frames "$DEP/vua-resources/grammatical.txt" --contextual-frames "$DEP/vua-resources/contextual.txt" > "$fn-cor.naf" 2> "$fn-cor.log") 2> "$fn-cor.err"; [ -s "$fn-cor.err" ] || rm -f "$fn-cor.err"
 if [ -e "$fn-cor.err" ]; then
     printf "error. Check $fn-cor.err for details.\n"
@@ -173,4 +176,4 @@ fi
 
 # Final steps
 cp "$fn-opi.naf" "$fn.naf"
-echo "Done."
+echo "Done. Elapsed time: $(($SECONDS / 3600))hrs $((($SECONDS / 60) % 60))min $(($SECONDS % 60))sec"

@@ -43,7 +43,13 @@ RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
 RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
     && git checkout 6f789bd \
-    && python setup.py install 
+    && cd alpinonaf \
+    && sed -i '/import tempfile/a from glob import glob' morph_syn_parser.py \
+    && sed -i "s/cmd = os.path.join(alpino_home, 'bin', 'Alpino')/&  + ' -veryfast -notk'/" morph_syn_parser.py \
+    && sed -i "/logging.warning('Not found the file {}'.format(missing  _files))/a    xml_files = glob(out_folder_alp + '*.xml')" morph_syn_parser.py \
+    && sed -i "s/output = check_output(cmd)/output = Popen(cmd, stdout=PIPE, stderr=None).stdout.read()/" morph_syn_parser.py \
+    && cd .. \
+    && python setup.py install
 
 # Download ixa-pipes package to get matching ixa-pipe-nerc jar and model versions
 RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \
@@ -123,5 +129,5 @@ RUN wget https://github.com/ADAH-EviDENce/NewsReader/raw/master/NewsReaderDutch/
 
 # This ENTRYPOINT overrides the CMD in the Alpino Docker
 # User still has to specify the path to inputfile(s)
-ENTRYPOINT ["/newsreader.sh"]
+# ENTRYPOINT ["/newsreader.sh"]
 CMD ["/bin/bash"]
