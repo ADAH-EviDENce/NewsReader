@@ -27,8 +27,8 @@ RUN mkdir central-dependencies \
 RUN cd central-dependencies \
     && mkdir dbpedia-spotlight \
     && cd dbpedia-spotlight \
-    && wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar \
-    && wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz \
+    && wget https://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar \
+    && wget https://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz \
     && tar -xzvf nl.tar.gz \
     && mvn install:install-file -Dfile=dbpedia-spotlight-0.7.1.jar -DgroupId=ixa -DartifactId=dbpedia-spotlight -Dversion=0.7 -Dpackaging=jar -DgeneratePom=true \
     && rm nl.tar.gz 
