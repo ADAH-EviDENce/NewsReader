@@ -6,19 +6,18 @@
 set -e
 
 # List of prefix names of modules
-DIR="$(pwd)/"
-TOK="ixa-pipe-tok"
-POS="morphosyntactic_parser_nl"
-NER="ixa-pipe-nerc"
-NED="ixa-pipe-ned"
-WSD="svm_wsd"
-TIM="ixa-heideltime"
-ONT="OntoTagger"
-SRL="vua-srl-nl"
-NEV="vua-srl-dutch-nominal-events"
-COR="EventCoreference"
-OPI="opinion_miner_deluxePP"
-DEP="central-dependencies"
+TOK="/ixa-pipe-tok"
+POS="/morphosyntactic_parser_nl"
+NER="/ixa-pipe-nerc"
+NED="/ixa-pipe-ned"
+WSD="/svm_wsd"
+TIM="/ixa-heideltime"
+ONT="/OntoTagger"
+SRL="/vua-srl-nl"
+NEV="/vua-srl-dutch-nominal-events"
+COR="/EventCoreference"
+OPI="/opinion_miner_deluxePP"
+DEP="/central-dependencies"
 
 # Central-dependency: KafNafParser
 if [ ! -d $DEP/KafNafParserPy ]; then
@@ -27,7 +26,7 @@ if [ ! -d $DEP/KafNafParserPy ]; then
     git clone https://github.com/cltl/KafNafParserPy > /dev/null
     cd KafNafParserPy
     python setup.py install > /dev/null
-    cd "$DIR"
+    
     printf "Done\n"
 else
     printf "KafNafParser found.\n"
@@ -38,7 +37,7 @@ if [ ! -d $DEP/vua-resources ]; then
     printf "VUA-resources not found. Installing VUA-resources..."
     cd $DEP
     git clone https://github.com/cltl/vua-resources > /dev/null
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "VUA-resources found.\n"
@@ -50,7 +49,7 @@ if [ ! -n $ALPINO_HOME ]; then
     cd $POS
     sh ./install_alpino.sh > /dev/null
     python setup.py install > /dev/null
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "Alpino found.\n"
@@ -64,7 +63,7 @@ if [ ! -d $DEP/dbpedia-spotlight/nl ]; then
     wget http://downloads.dbpedia-spotlight.org/spotlight/dbpedia-spotlight-0.7.1.jar
     wget http://downloads.dbpedia-spotlight.org/2016-10/nl/model/nl.tar.gz
     tar -xzvf nl.tar.gz
-    cd "$DIR"
+    
     printf "Done\n"
 else
     printf "DBpedia-spotlight found.\n"
@@ -79,7 +78,7 @@ if [ ! -d $WSD/libsvm ]; then
     make > /dev/null
     cd ..
     mv libsvm.so.2 ..
-    cd "$DIR"
+    
     printf "Done\n"
 else
     printf "libSVM found.\n"
@@ -92,7 +91,7 @@ if [ ! -d "$WSD/models" ]; then
     wget --user=cltl --password='.cltl.' kyoto.let.vu.nl/~izquierdo/models_wsd_svm_dsc.tgz 2> /dev/null
     tar -xzf models_wsd_svm_dsc.tgz
     rm models_wsd_svm_dsc.tgz
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "WSD models found.\n"
@@ -118,7 +117,7 @@ if [ ! -d $OPI/crf_lib/CRF++-0.58 ]; then
     make
     printf "Done\n"
     echo "PATH_TO_CRF_TEST='$(pwd)/crf_test'" > path_crf.py
-    cd $DIR
+    
 else
     printf "CRFlib found.\n"
 fi
@@ -133,7 +132,7 @@ if [ ! -d $OPI/svm_light ]; then
     tar -xzvf svm_light.tar.gz > /dev/null
     rm svm_light.tar.gz
     make > /dev/null
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "SVMlight found.\n"
@@ -156,7 +155,7 @@ if [ ! -d $OPI/models ]; then
     rm -Rf models_hotel_de/
     rm -Rf models_hotel_it/
     rm -Rf models_hotel_es/
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "Opinion models found.\n"
@@ -171,7 +170,7 @@ if [ ! -d $OPI/polarity_models ]; then
     rm polarity_models.tgz
     cd polarity_models
     rm -Rf en/
-    cd $DIR
+    
     printf "Done\n"
 else
     printf "Polarity models found.\n"

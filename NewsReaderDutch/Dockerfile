@@ -44,9 +44,8 @@ RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
     && cd morphosyntactic_parser_nl \
     && git checkout 6f789bd \
     && cd alpinonaf \
-    && sed -i '/import tempfile/a from glob import glob' morph_syn_parser.py \
     && sed -i "s/cmd = os.path.join(alpino_home, 'bin', 'Alpino')/&  + ' -veryfast -notk'/" morph_syn_parser.py \
-    && sed -i "/        logging.warning('Not found the file {}'.format(missing  _files))/a \ \ \ \ xml_files = glob(out_folder_alp + '*.xml')" morph_syn_parser.py \
+    && sed -i "/        logging.warning('Not found the file {}'.format(missing_files))/a \ \ \ \ xml_files = [xml_file for xml_file in xml_files if os.path.exists(xml_file)]" morph_syn_parser.py \
     && sed -i "s/output = check_output(cmd)/output = Popen(cmd, stdout=PIPE, stderr=None).stdout.read()/" morph_syn_parser.py \
     && cd .. \
     && python setup.py install
@@ -97,7 +96,8 @@ RUN git clone https://github.com/cltl/OntoTagger \
 # Download semantic role labeler
 RUN git clone https://github.com/newsreader/vua-srl-nl \
     && cd vua-srl-nl \
-    && git checkout 997a85f
+    && git checkout 997a85f \
+    && sed -i 's/set -e//' run.sh
 
 # Download additional roles
 RUN git clone https://github.com/newsreader/vua-srl-dutch-nominal-events \
