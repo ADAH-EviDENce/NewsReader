@@ -13,7 +13,7 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/so
 
 # Python dependencies
 RUN apt-get install -y python-pip python-lxml \
-    && pip install KafNafParserPy future
+    && pip install KafNafParserPy alpinonaf future
 
 # Tilburg ILK dependencies
 RUN apt-get install -y timbl
@@ -38,17 +38,6 @@ RUN git clone https://github.com/ixa-ehu/ixa-pipe-tok \
     && cd ixa-pipe-tok \
     && git checkout 739ff20 \
     && mvn clean install
-
-# Install morphosyntactic parser
-RUN git clone https://github.com/cltl/morphosyntactic_parser_nl \
-    && cd morphosyntactic_parser_nl \
-    && git checkout 6f789bd \
-    && cd alpinonaf \
-    && sed -i "s/cmd = os.path.join(alpino_home, 'bin', 'Alpino')/&  + ' -veryfast -notk'/" morph_syn_parser.py \
-    && sed -i "/        logging.warning('Not found the file {}'.format(missing_files))/a \ \ \ \ xml_files = [xml_file for xml_file in xml_files if os.path.exists(xml_file)]" morph_syn_parser.py \
-    && sed -i "s/output = check_output(cmd)/output = Popen(cmd, stdout=PIPE, stderr=None).stdout.read()/" morph_syn_parser.py \
-    && cd .. \
-    && python setup.py install
 
 # Download ixa-pipes package to get matching ixa-pipe-nerc jar and model versions
 RUN wget http://ixa2.si.ehu.es/ixa-pipes/models/ixa-pipes-1.1.1.tar.gz \

@@ -53,7 +53,7 @@ fi
 
 # Part-of-speech-tagging (morphosyntactic parser + Alpino)
 printf "Starting part-of-speech tagging... "
-cat "$fn.naf" | python2 -m alpinonaf -t 0.05 > "$fn-pos.naf" 2> "$fn-pos.log"
+cat "$fn.naf" | python -m alpinonaf > "$fn-pos.naf" 2> "$fn-pos.log"
 if [ $? -ne 0 ]; then
     printf "error:\n."
     cat "$fn-pos.log"
