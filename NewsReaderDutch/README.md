@@ -19,7 +19,7 @@ from within the root of the repository.
 
 The Docker container can be run directly on your text files by calling:
 ```shell
-docker run -v /workspace/:/work/ newsreaderdutch /work/file.txt
+docker run -v /workspace/:/work/ evidence/newsreaderdutch /work/file.txt
 ```
 where `/workspace/` is your local directory containing files that need to be processed and `file.txt` is the document that you would like to get annotated. The output will have the same filename, but with a `*.naf` extension. Currently, the pipeline writes the output of each module separately as well.
 
